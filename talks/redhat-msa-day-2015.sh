@@ -16,8 +16,6 @@ fi
 # Let the container warm up
 sleep 3
 
-rm $log
-
 if [ x$DOCKER_HOST = x ]; then
    host="localhost"
 else
