@@ -14,6 +14,9 @@ if [ $? -ne "0" ]; then
    exit 1
 fi
 
+# Let the container warm up
+sleep 5
+
 rm $log
 
 if [ x$DOCKER_HOST = x ]; then
