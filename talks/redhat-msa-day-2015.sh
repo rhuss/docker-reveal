@@ -1,16 +1,14 @@
 #!/bin/sh
-log=/tmp/reveal_run.$$
+# Optionally add -v ~/.m2:/root/.m2 to map to a local maven repository for the demos
 docker run -d \
       -v /var/run/docker.sock:/var/run/docker.sock \
-      -v ~/.2boot2docker/certs/boot2docker-vm/:/certs \
+      -v ~/.boot2docker/certs/boot2docker-vm/:/certs \
       -v ~/.m2:/root/.m2 \
       -p 9000:9000 -p 57575:57575 -p 35729:35729 \
-      jolokia/redhat-msa-day:london-2015 >$log 2>&1
+      jolokia/redhat-msa-day:london-2015 1>&2
 
 if [ $? -ne "0" ]; then
    echo "Error starting container: $?" 1>&2
-   cat $log 1>&2
-   rm $log
    echo "http://cdn.shopify.com/s/files/1/0535/6917/products/problemsdemotivator.jpeg?v=1403276101"
    exit 1
 fi
