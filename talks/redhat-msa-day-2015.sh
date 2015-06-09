@@ -15,7 +15,7 @@ if [ $? -ne "0" ]; then
 fi
 
 # Let the container warm up
-sleep 5
+sleep 3
 
 rm $log
 
