@@ -8,9 +8,10 @@ docker run -d \
       jolokia/redhat-msa-day:london-2015 >$log 2>&1
 
 if [ $? -ne "0" ]; then
-   echo "Error starting container: $?"
-   cat $log
+   echo "Error starting container: $?" 1>&2
+   cat $log 1>&2
    rm $log
+   echo "http://cdn.shopify.com/s/files/1/0535/6917/products/problemsdemotivator.jpeg?v=1403276101"
    exit 1
 fi
 
