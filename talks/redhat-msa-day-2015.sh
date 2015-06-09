@@ -26,6 +26,7 @@ else
      host=$(echo $DOCKER_HOST | sed -e "s/[^/]*\/\/\([^:/]*\).*/\1/")
    else
      host="localhost"
+   fi
 fi
 echo "http://$host:9000/"
 
