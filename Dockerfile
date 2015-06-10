@@ -29,8 +29,7 @@ RUN apk update && \
           git \
           vim \
           docker \
-          docker-bash-completion \
-          gcr && \
+          docker-bash-completion && \
     pip install --upgrade pip && \
     pip install libsass && \
     npm install -g npm && \
@@ -47,7 +46,8 @@ RUN cd / && \
     cat /butterfly/coffees/term.coffee | sed -e 's/@cursorBlink\s*=\s*true/@cursorBlink = false/' > /tmp/term.coffee && \
     mv /tmp/term.coffee /butterfly/coffees/term.coffee && \
     python setup.py build && \
-    python setup.py install
+    python setup.py install && \
+    cp /etc/terminfo/x/xterm-color /etc/terminfo/x/xterm-256color
 
 ADD docker/mvn.sh /usr/bin/mvn
 ADD docker/start.sh /start.sh
