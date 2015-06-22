@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Reveal.js served by Docker</title>
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.min.css">
+
+        <link rel="stylesheet" href="bower_components/reveal.js/css/theme/solarized.css" id="theme">
+
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="bower_components/reveal-highlight-themes/styles/solarized_light.css" id="highlight-theme">
+
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+          if( window.location.search.match( /print-pdf/gi ) ) {
+            var link = document.createElement( 'link' );
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = 'bower_components/reveal.js/css/print/pdf.css';
+                document.getElementsByTagName( 'head' )[0].appendChild( link );
+            }
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <div class="slides">
+
+                <% _.forEach(slides, function(slide) { %>
+                    <% if (!_.isArray(slide)) { %>
+                        <%= section(slide) %>
+                    <% } %>
+                    <% if (_.isArray(slide)) { %>
+                        <section>
+                            <% _.forEach(slide, function(verticalslide) { %>
+                                <%= section(verticalslide) %>
+                            <% }); %>
+                        </section>
+                    <% } %>
+                <% }); %>
+            </div>
+
+        </div>
+
+        <script src="bower_components/reveal.js/lib/js/head.min.js"></script>
+        <script src="bower_components/reveal.js/js/reveal.min.js"></script>
+        <script>
+
+            // Whether to auto activate terminals when entering a slide with "demo"
+            var activateTerminal = true;
+
+            // Configure Reveal
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'bower_components/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'bower_components/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'bower_components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'bower_components/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'bower_components/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+                    // { src: 'bower_components/reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+                    //{ src: 'bower_components/reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+
+                    { src: 'js/loadhtmlslides.js', condition: function() { return !!document.querySelector( '[data-html]' ); } }
+                ]
+            });
+
+            Reveal.addEventListener( 'slidechanged', function( event ) {
+                var current = event.currentSlide;
+                if (activateTerminal) {
+                    var iframe = current.querySelector("iframe.demo");
+                    if (iframe) {
+                        setTimeout(function () {
+                            iframe.contentWindow.focus();
+                        }, 100);
+                    }
+                    // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+                }
+            } );
+
+            function getButterflyUrl() {
+                var match = /^https?:\/\/([^:\/]+)/.exec(window.location);
+                return "http://" + match[1] + ":57575/";
+            }
+
+            // This function is used to size the iframe containing the terminal emulation. It is
+            // by no means perfect and is currently a matter of trial and error for each presentation.
+            // If someone with more CSS fu than me figures out how to do this responsively, I would be more
+            // than happy. Please open a PR or issue at https://github.com/rhuss/docker-reveal
+            function demo(event) {
+                var section = event.currentSlide || event;
+                var demo = section.getElementsByClassName('demo')[0];
+                if (demo) {
+                    demo.src = getButterflyUrl();
+                    demo.style.height =
+                        section.offsetHeight
+                        + 200
+                        - demo.offsetTop
+                        + 'px';
+                    demo.style.width =
+                        section.offsetWidth
+                        - demo.offsetLeft
+                        + 100
+                        + Math.round(0.10 * section.offsetWidth)
+                        + 'px';
+                    // demo.style.marginLeft = "-10%";
+                    demo.style.paddingTop = "10px";
+                }
+                console.log('Slide ' + event.indexh + ': section.offsetHeight: ' + section.offsetHeight +
+                            ', demo.offsetTop: ' + (demo ? demo.offsetTop : 'no demo'));
+            }
+            Reveal.addEventListener( 'slidechanged', demo );
+            Reveal.addEventListener( 'ready', demo );
+        </script>
+
+    </body>
+
+</html>

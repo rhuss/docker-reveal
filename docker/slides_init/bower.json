@@ -1,0 +1,8 @@
+{
+  "name": "reveal-presentations-served-by-docker",
+  "version": "0.1.0",
+  "dependencies": {
+    "reveal.js": "~2.6.1",
+    "reveal-highlight-themes": "~8.3.0"
+  }
+}
