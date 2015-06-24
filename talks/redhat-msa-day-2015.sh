@@ -5,7 +5,7 @@ docker run -d \
       -v ~/.boot2docker/certs/boot2docker-vm/:/certs \
       -v ~/.m2:/root/.m2 \
       -p 9000:9000 -p 57575:57575 -p 35729:35729 \
-      jolokia/redhat-msa-day:london-2015 1>&2
+      rhuss/redhat-msa-day:london-2015 1>&2
 
 if [ $? -ne "0" ]; then
    echo "Error starting container: $?" 1>&2

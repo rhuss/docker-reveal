@@ -19,8 +19,11 @@ All your slides will be stored belong a certain directory, referred to `$SLIDES`
 a first simple set of slides (as `yo reveal` would do) mount `$SLIDES` into the container and 
 run this image with the option `-i`:
 
-````
-docker run -ti -p 9000:9000 -p 57575:57575 -p 35729:35729 -v $SLIDES:/slides rhuss/docker-reveal -i  
+````bash
+docker run -ti \
+           -p 9000:9000 -p 57575:57575 -p 35729:35729 \
+           -v $SLIDES:/slides \
+           rhuss/docker-reveal -i  
 ````
 
 This will copy over a set of slides and start an HTTP server on port 9000. You can visit the demo slides by opening 
@@ -33,8 +36,10 @@ your browser will refresh immediately.
 
 Slides can be created easily with `yo`:
 
-````
-docker run -ti -v $SLIDES:/slides rhuss/docker-reveal -n "Slide title" [--markdown|--notes|--attributes]
+````bash
+docker run -ti \
+           -v $SLIDES:/slides \
+           rhuss/docker-reveal -n "Slide title" [--markdown|--notes|--attributes]
 ````
 
 This can be also done manually:
