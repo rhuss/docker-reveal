@@ -79,7 +79,7 @@ if [ -n "${slide}" ]; then
 fi
 
 # Start butterfly server in the background
-/butterfly/butterfly.server.py --motd='' --unsecure --host=0.0.0.0 --login=false &
+/butterfly/butterfly.server.py --motd='' --unsecure --host=0.0.0.0 --login=false --cmd="ash -l" &
 
 # Server slides
 cd /slides

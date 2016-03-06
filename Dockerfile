@@ -13,6 +13,7 @@ FROM alpine:3.3
 
 ENV MAVEN_VERSION 3.3.9
 ENV MAVEN_BASE apache-maven-${MAVEN_VERSION}
+ENV JAVA_HOME /usr/lib/jvm/default-jvm
 
 RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk update && \
@@ -38,13 +39,12 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
     npm install -g grunt-cli bower yo generator-reveal && \
     wget http://www.eu.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/${MAVEN_BASE}-bin.tar.gz \
          -O /tmp/maven.tgz && \
-   tar zxvf /tmp/maven.tgz && mv ${MAVEN_BASE} /maven && \
+    tar zxvf /tmp/maven.tgz && mv ${MAVEN_BASE} /maven && \
     ln -s /maven/bin/mvn /usr/bin/ && \
     rm /usr/bin/vi && ln -s /usr/bin/vim /usr/bin/vi && \
     rm /tmp/maven.tgz /var/cache/apk/* && \
-    cd /
-
-RUN git clone https://github.com/paradoxxxzero/butterfly && \
+    cd / && \
+    git clone https://github.com/paradoxxxzero/butterfly && \
     mkdir -p /etc/butterfly/themes && \
     git clone https://github.com/paradoxxxzero/butterfly-themes /etc/butterfly/themes && \
     cd butterfly && \
@@ -59,10 +59,14 @@ RUN git clone https://github.com/paradoxxxzero/butterfly && \
     adduser -D -h /slides -s /bin/ash -u 1000 yo && \
     git clone https://github.com/paradoxxxzero/butterfly-demos /butterfly/demos
 
+RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile && \
+    echo 'export PS1="[\[\e[0;36m\]\w\[\e[0;0m\]] "' >> /etc/profile
+
 ADD docker/emacs.el /root/.emacs
 
 ADD docker/start.sh /start.sh
 ADD docker/cacerts /usr/lib/jvm/default-jvm/jre/lib/security/
+
 # ADD docker/butterfly /etc/butterfly
 ADD docker/slides_init /slides_init
 ADD docker/mime.types /etc/mime.types
