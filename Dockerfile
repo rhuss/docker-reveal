@@ -14,7 +14,7 @@ FROM alpine:3.3
 ENV MAVEN_VERSION 3.3.9
 ENV MAVEN_BASE apache-maven-${MAVEN_VERSION}
 
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apl/repositories && \
+RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk update && \
     apk upgrade && \
     apk add \
