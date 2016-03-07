@@ -5,6 +5,6 @@ As single output you get an URL which can directly pipe to your browser. And if 
 with a URL link shortener, you can fire up your presentation as elegantly as
  
 ````
-open $(curl bit.ly/docker-for-java-devs | sh)
+open $(curl -sL bit.ly/docker-for-java-devs | sh)
 ````
 
