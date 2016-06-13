@@ -81,6 +81,11 @@ fi
 # Start butterfly server in the background
 /butterfly/butterfly.server.py --motd='' --unsecure --host=0.0.0.0 --login=false --cmd="ash -l" &
 
+# Hook for starting up custom code
+if [ -f /start_extra.sh ]; then
+    sh /start_extra.sh &
+fi
+
 # Server slides
 cd /slides
 grunt serve
