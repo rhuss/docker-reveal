@@ -33,6 +33,8 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
           vim \
           docker \
           curl \
+          bash \
+          bash-completion \          
           emacs && \
     pip install --upgrade pip && \
     pip install libsass && \
@@ -58,11 +60,13 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
     cp /etc/terminfo/x/xterm-color /etc/terminfo/x/xterm-256color && \
     mkdir /slides && \
     adduser -D -h /slides -s /bin/ash -u 1000 yo && \
-    git clone https://github.com/paradoxxxzero/butterfly-demos /butterfly/demos
+    git clone https://github.com/paradoxxxzero/butterfly-demos /butterfly/demos && \
+    echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile 
 
-RUN echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile && \
-    echo 'export PS1="[\[\e[0;36m\]\w\[\e[0;0m\]] "' >> /etc/profile
+RUN sed -e 's/\/bin\/ash/\/bin\/bash/' /etc/passwd > /tmp/,x && \
+    mv /tmp/,x /etc/passwd
 
+ADD docker/prompt.sh /etc/profile.d/prompt.sh
 ADD docker/emacs.el /root/.emacs
 
 ADD docker/start.sh /start.sh
