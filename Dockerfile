@@ -9,7 +9,7 @@
 #
 # See also /start.sh for possible options
 
-FROM alpine:3.3
+FROM alpine:3.4
 
 ENV MAVEN_VERSION 3.3.9
 ENV MAVEN_BASE apache-maven-${MAVEN_VERSION}
@@ -32,6 +32,7 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
           git \
           vim \
           docker \
+          curl \
           emacs && \
     pip install --upgrade pip && \
     pip install libsass && \
