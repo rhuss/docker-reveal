@@ -11,7 +11,7 @@ This docker image is useful for creating reveal.js presentations. It uses the Ye
   for inline terminal demos.  
 * Docker client
 * Live Reload
-* Java 7 and Maven 3.3.1
+* Java 8 and Maven 3.3.1
 
 ### Initialization
 
