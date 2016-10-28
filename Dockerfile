@@ -28,7 +28,7 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
           py-pip \
           gcc \
           g++ \
-          openjdk7 \
+          openjdk8 \
           git \
           vim \
           docker \
@@ -71,6 +71,18 @@ ADD docker/emacs.el /root/.emacs
 
 ADD docker/start.sh /start.sh
 ADD docker/cacerts /usr/lib/jvm/default-jvm/jre/lib/security/
+
+# Workaround for making CTRL-C working again
+ADD docker/shell_wrapper/reset_signals.c /tmp
+ADD docker/shell_wrapper/ash_wrapper.sh /bin/ash_wrapper.sh
+ADD docker/shell_wrapper/bash_wrapper.sh /bin/bash_wrapper.sh
+RUN gcc /tmp/reset_signals.c -o /bin/reset_signals \
+ && rm /bin/ash \
+ && mv /bin/ash_wrapper.sh /bin/ash \
+ && chmod 755 /bin/ash \
+ && mv /bin/bash /bin/bash.orig \
+ && mv /bin/bash_wrapper.sh /bin/bash \
+ && chmod 755 /bin/bash
 
 # ADD docker/butterfly /etc/butterfly
 ADD docker/slides_init /slides_init
