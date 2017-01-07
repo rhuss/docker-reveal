@@ -11,10 +11,10 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.min.css">
-    
+        <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.css">
+
         <link rel="stylesheet" href="bower_components/reveal.js/css/theme/default.css" id="theme">
-    
+
 
         <!-- For syntax highlighting -->
         <link rel="stylesheet" href="bower_components/reveal-highlight-themes/styles/zenburn.css" id="highlight-theme">
@@ -41,21 +41,21 @@
 
             <div class="slides">
 
-                
-                    
-                        
+
+
+
     <section data-markdown="slides/index.md"></section>
 
 
-                    
-                    
-                
+
+
+
             </div>
 
         </div>
 
         <script src="bower_components/reveal.js/lib/js/head.min.js"></script>
-        <script src="bower_components/reveal.js/js/reveal.min.js"></script>
+        <script src="bower_components/reveal.js/js/reveal.js"></script>
         <script>
             // Configure Reveal
             // Full list of configuration options available here:
@@ -68,7 +68,12 @@
 
                 theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
                 transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
-
+                menu: {
+                     themes:     false,
+                     keyboard:   true,
+                     openButton: false,
+               //      hideMissingTitles: true,
+                },
                 // Optional libraries used to extend on reveal.js
                 dependencies: [
                     { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
@@ -80,11 +85,74 @@
                     // { src: 'bower_components/reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
                     //{ src: 'bower_components/reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
 
-                    { src: 'js/loadhtmlslides.js', condition: function() { return !!document.querySelector( '[data-html]' ); } }
+                    { src: 'js/loadhtmlslides.js', condition: function() { return !!document.querySelector( '[data-html]' ); } },
+                    { src: 'bower_components/reveal.js-menu/menu.js' }
                 ]
             });
+
+            // Function to activate "demo" iframes after 1.5 seconds
+            // Note than when a demo iframe is selected then navigation doesn't work anymore
+            (function() {
+
+              var isOverview = false;
+              var timeOut = null;
+              Reveal.addEventListener('slidechanged', function (event) {
+              var current = event.currentSlide;
+              if (!isOverview && activateTerminal) {
+                var iframe = current.querySelector("iframe.demo");
+                if (iframe) {
+                  timeOut = setTimeout(function () {
+                    // TODO: Maybe highlight frame when he gets focus
+                    iframe.contentWindow.focus();
+                    timeOut = null;
+                  }, 1500);
+                } else if (timeOut) {
+                  clearTimeout(timeOut);
+                  timeOut = null;
+                }
+                // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+              }
+            });
+
+              Reveal.addEventListener('overviewshown', function() { isOverview = true; });
+              Reveal.addEventListener('overviewhidden', function() { isOverview = false; });
+            })();
         </script>
 
+        <script>
+          function getButterflyUrl() {
+            var match = /^https?:\/\/([^:\/]+)/.exec(window.location);
+            return "http://" + match[1] + ":57575/";
+          }
+
+          // Setup slides with demos ....
+          function demo(event) {
+            var section = event.currentSlide || event;
+            var demo = section.getElementsByClassName('demo')[0];
+            if (demo) {
+              if (/PhantomJS/.test(window.navigator.userAgent)) {
+                 demo.style.display="none";
+                 return;
+              }
+              //var slide = document.querySelector("div.reveal div.slides");
+
+              //slide.style.width='1280px';
+              demo.src = getButterflyUrl();
+
+              // We try some default, but please overwrite them via localStorage if required
+              demo.style.height = (localStorage && localStorage.getItem("height")) || "586px";
+              demo.style.width = (localStorage && localStorage.getItem("width")) || "110%";
+              demo.style.marginLeft = (localStorage && localStorage.getItem("marginLeft")) || "-110px";
+              if (localStorage && localStorage.getItem("paddingTop")) {
+                demo.style.paddingTop = localStorage.getItem("paddingTop");
+              }
+            }
+          }
+
+          Reveal.addEventListener( 'slidechanged', demo );
+          Reveal.addEventListener( 'ready', demo );
+        </script>
+        <!-- ===KEYBOARD_BINDINGS_PLACEHOLDER=== -->
     </body>
 
 </html>

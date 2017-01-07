@@ -34,8 +34,7 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
           docker \
           curl \
           bash \
-          bash-completion \          
-          emacs && \
+          bash-completion && \
     pip install --upgrade pip && \
     pip install libsass && \
     npm install -g npm && \

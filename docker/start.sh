@@ -2,7 +2,7 @@
 
 O=`getopt -l "markdown,attributes,notes" ishfn:  "$@"` || exit 1
 usage=`cat <<EOT
-Usage: 
+Usage:
 
    docker run -it -p \\\\
               -v /var/run/docker.sock:/var/run/docker.sock \\\\
@@ -13,7 +13,7 @@ Usage:
               [options]
 
    with the following options:
-    
+
    -i         Initialize /slides with a sample presentation
    -f         Force initialization even when /slides already contains content
    -s         Run a shell instead of starting up 'grunt serve'
@@ -24,7 +24,7 @@ Usage:
    -h  This help message
 
 The following ports are mapped:
-   
+
     9000 - HTTP Port for reveal presentations
    57575 - HTTP Port for Butterfly terminal emulation
    35279 - Live Reload port
@@ -74,7 +74,7 @@ if [ -n "${slide}" ]; then
         exit 1
     fi
     cd /slides
-    su yo -c "yo --no-insight reveal:slide \"$slide\" $slide_opts"
+    su yo -s /bin/ash -c "yo --no-insight reveal:slide \"$slide\" $slide_opts"
     exit 0
 fi
 

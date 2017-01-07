@@ -11,7 +11,7 @@
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.min.css">
+        <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.css">
 
         <link rel="stylesheet" href="bower_components/reveal.js/css/theme/solarized.css" id="theme">
 
@@ -58,7 +58,7 @@
         </div>
 
         <script src="bower_components/reveal.js/lib/js/head.min.js"></script>
-        <script src="bower_components/reveal.js/js/reveal.min.js"></script>
+        <script src="bower_components/reveal.js/js/reveal.js"></script>
         <script>
 
             // Whether to auto activate terminals when entering a slide with "demo"
@@ -75,7 +75,12 @@
 
                 theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
                 transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
-
+                menu: {
+                     themes:     false,
+                     keyboard:   true,
+                     openButton: false,
+               //      hideMissingTitles: true,
+                },
                 // Optional libraries used to extend on reveal.js
                 dependencies: [
                     { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
@@ -83,60 +88,112 @@
                     { src: 'bower_components/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
                     { src: 'bower_components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
                     { src: 'bower_components/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-                    { src: 'bower_components/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+                    //{ src: 'bower_components/reveal.js/plugin/notes/notes.js', async: true, condition: function() { //return !!document.body.classList; } },
                     // { src: 'bower_components/reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
                     //{ src: 'bower_components/reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
 
-                    { src: 'js/loadhtmlslides.js', condition: function() { return !!document.querySelector( '[data-html]' ); } }
+                    { src: 'js/loadhtmlslides.js', condition: function() { return !!document.querySelector( '[data-html]' ); } },
+                    { src: 'bower_components/reveal.js-menu/menu.js' }
                 ]
             });
 
-            Reveal.addEventListener( 'slidechanged', function( event ) {
-                var current = event.currentSlide;
-                if (activateTerminal) {
-                    var iframe = current.querySelector("iframe.demo");
-                    if (iframe) {
-                        setTimeout(function () {
-                            iframe.contentWindow.focus();
-                        }, 100);
-                    }
-                    // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+            // Function to activate "demo" iframes after 1.5 seconds
+            // Note than when a demo iframe is selected then navigation doesn't work anymore
+            (function() {
+
+              var isOverview = false;
+              var timeOut = null;
+              Reveal.addEventListener('slidechanged', function (event) {
+              var current = event.currentSlide;
+              if (!isOverview && activateTerminal) {
+                var iframe = current.querySelector("iframe.demo");
+                if (iframe) {
+                  timeOut = setTimeout(function () {
+                    // TODO: Maybe highlight frame when he gets focus
+                    iframe.contentWindow.focus();
+                    timeOut = null;
+                  }, 1500);
+                } else if (timeOut) {
+                  clearTimeout(timeOut);
+                  timeOut = null;
                 }
-            } );
+                // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+              }
+            });
+
+              Reveal.addEventListener('overviewshown', function() { isOverview = true; });
+              Reveal.addEventListener('overviewhidden', function() { isOverview = false; });
+            })();
 
             function getButterflyUrl() {
                 var match = /^https?:\/\/([^:\/]+)/.exec(window.location);
                 return "http://" + match[1] + ":57575/";
             }
 
-            // This function is used to size the iframe containing the terminal emulation. It is
-            // by no means perfect and is currently a matter of trial and error for each presentation.
-            // If someone with more CSS fu than me figures out how to do this responsively, I would be more
-            // than happy. Please open a PR or issue at https://github.com/rhuss/docker-reveal
+            // Setup slides with demos ....
             function demo(event) {
-                var section = event.currentSlide || event;
-                var demo = section.getElementsByClassName('demo')[0];
-                if (demo) {
-                    demo.src = getButterflyUrl();
-                    demo.style.height =
-                        section.offsetHeight
-                        + 200
-                        - demo.offsetTop
-                        + 'px';
-                    demo.style.width =
-                        section.offsetWidth
-                        - demo.offsetLeft
-                        + 100
-                        + Math.round(0.10 * section.offsetWidth)
-                        + 'px';
-                    // demo.style.marginLeft = "-10%";
-                    demo.style.paddingTop = "10px";
+              var section = event.currentSlide || event;
+              var demo = section.getElementsByClassName('demo')[0];
+              if (demo) {
+                if (/PhantomJS/.test(window.navigator.userAgent)) {
+                   demo.style.display="none";
+                   return;
                 }
+                //var slide = document.querySelector("div.reveal div.slides");
+
+                //slide.style.width='1280px';
+                demo.src = getButterflyUrl();
+
+                var defaultHeight =
+                    section.offsetHeight
+                    + 200
+                    - demo.offsetTop
+                    + 'px';
+                var defaultWidth =
+                    section.offsetWidth
+                    - demo.offsetLeft
+                    + 100
+                    + Math.round(0.10 * section.offsetWidth)
+                    + 'px';
+                var defaultMarginLeft = "-110px";
+                var defaultPaddingTop = "10px";
+
+                // We try some default, but please overwrite them via localStorage if required
+                demo.style.height = (localStorage && localStorage.getItem("height")) || defaultHeight;
+                demo.style.width = (localStorage && localStorage.getItem("width")) || defaultWidth;
+                demo.style.marginLeft = (localStorage && localStorage.getItem("marginLeft")) || defaultMarginLeft;
+                demo.style.paddingTop = (localStorage && localStorage.getItem("paddingTop")) || defaultPaddingTop;
+
                 console.log('Slide ' + event.indexh + ': section.offsetHeight: ' + section.offsetHeight +
                             ', demo.offsetTop: ' + (demo ? demo.offsetTop : 'no demo'));
+              }
             }
             Reveal.addEventListener( 'slidechanged', demo );
             Reveal.addEventListener( 'ready', demo );
+
+            var use8BitdoKeymap = (localStorage && localStorage.getItem("use8Bitdo"))
+            if (use8BitdoKeymap) {
+              Reveal.configure({
+                keyboard: {
+                  86: 'next',
+                  87: 'prev',
+                  82: 'up',
+                  65: 'down',
+                  81: 'left',
+                  80: 'right',
+                  //: 'navigateFragment',
+                  89: 'prevFragment',
+                  88: 'nextFragment',
+                  66: 'togglePause',
+                  //84: 'toggleAutoSlide',
+                  83: 'toggleOverview',
+                  84: function() {
+                    // Fullscreen
+                    Reveal.triggerKey(70)
+                  },
+                }
+              });
+            }
         </script>
 
     </body>
