@@ -79,7 +79,7 @@ RUN cd / && \
 
 ### 8bitdo Zero support
 
-In case you own a [8bitdo Zero] and want to use it as remote control, set in you Browser's `localStorage` (see Developer console) the key `use8Bitdo` to `true`. Then you can use the following buttons for the following actions:
+In case you own a [8bitdo Zero](http://www.8bitdo.com/zero/) and want to use it as remote control, set in you Browser's `localStorage` (see Developer console) the key `use8Bitdo` to `true`. Then you can use the following buttons for the following actions:
 
 Button | Action
 -------| ------
