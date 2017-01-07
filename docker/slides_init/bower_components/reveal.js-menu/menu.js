@@ -121,7 +121,7 @@ var RevealMenu = window.RevealMenu || (function(){
 			}
 
 			function onDocumentKeyDown(event) {
-				if (event.keyCode === 77 || (use8Bitdo && event.keyCode === 85 /* 8BITDO */)) {
+				if (event.keyCode === 77 || (use8Bitdo && event.keyCode === 88 /* 8BITDO */)) {
 					toggleMenu();
 				} else if (isOpen()) {
 					event.stopImmediatePropagation();
@@ -163,7 +163,7 @@ var RevealMenu = window.RevealMenu || (function(){
 							}
 							break;
 						// pageup, u
-						case 33: case 85: /** 8BITDO --> */ case 88:
+						case 33: case 85: /** 8BITDO --> */ case 83:
 							var itemsAbove = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) > 0; });
 							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 
@@ -188,7 +188,7 @@ var RevealMenu = window.RevealMenu || (function(){
 							}
 							break;
 						// pagedown, d
-						case 34: case 68: /** 8BITDO --> */ case 89:
+						case 34: case 68: /** 8BITDO --> */ case 85:
 							var visibleItems = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) == 0; });
 							var itemsBelow = $('.active-menu-panel .slide-menu-items li').filter(function(item) { return visibleOffset(item) < 0; });
 
