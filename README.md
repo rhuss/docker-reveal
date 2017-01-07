@@ -8,7 +8,7 @@ This docker image is useful for creating reveal.js presentations. It uses the Ye
 
 * Based on [Alpine Linux](https://www.alpinelinux.org/)
 * [Butterfly](http://paradoxxxzero.github.io/2014/02/28/butterfly.html), a HTML 5 terminal emulation,
-  for inline terminal demos.  
+  for inline terminal demos.
 * Docker client
 * Live Reload
 * Java 8 and Maven 3.3.1
@@ -23,7 +23,7 @@ run this image with the option `-i`:
 docker run -ti \
            -p 9000:9000 -p 57575:57575 -p 35729:35729 \
            -v $SLIDES:/slides \
-           rhuss/docker-reveal -i  
+           rhuss/docker-reveal -i
 ````
 
 This will copy over a set of slides and start an HTTP server on port 9000. You can visit the demo slides by opening
@@ -76,6 +76,38 @@ RUN cd / && \
     cd docker-maven-sample && \
     mvn install
 ````
+
+### 8bitdo Zero support
+
+In case you own a [8bitdo Zero] and want to use it as remote control, set in you Browser's `localStorage` (see Developer console) the key `use8Bitdo` to `true`. Then you can use the following buttons for the following actions:
+
+Button | Action
+-------| ------
+L | Next slide
+R | Previous slide
+Up | Up one slide
+Down | Down one slide
+Left | Left one slide
+Right | Right one slide
+Select | Menu
+Start | Overview
+A | Pause (Black)
+Y | Full Screen
+
+When in menu mode the button mappings is:
+
+Button | Action
+-------| ------
+L | Select menu item
+Up | Up in menu list
+Down | Down in menu list
+Left | Left panel
+Right | Right Panel
+Select | Leave Menu
+A | First position in list
+Y | Last position in list
+X | Page up in list
+Y | Page down in list
 
 ### Gotchas
 
