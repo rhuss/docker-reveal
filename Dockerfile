@@ -9,17 +9,18 @@
 #
 # See also /start.sh for possible options
 
-FROM alpine:3.4
+FROM alpine:3.6
 
-ENV MAVEN_VERSION 3.3.9
+ENV MAVEN_VERSION 3.5.0
 ENV MAVEN_BASE apache-maven-${MAVEN_VERSION}
 ENV JAVA_HOME /usr/lib/jvm/default-jvm
 
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk update && \
+#  RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+RUN    apk update && \
     apk upgrade && \
     apk add \
           nodejs \
+          nodejs-npm \
           python \
           python-dev \
           musl-dev \
@@ -39,7 +40,7 @@ RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositor
     pip install libsass && \
     npm install -g npm && \
     npm install -g grunt-cli bower yo generator-reveal && \
-    wget http://www.eu.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/${MAVEN_BASE}-bin.tar.gz \
+    wget http://www-eu.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/${MAVEN_BASE}-bin.tar.gz \
          -O /tmp/maven.tgz && \
     tar zxvf /tmp/maven.tgz && mv ${MAVEN_BASE} /maven && \
     ln -s /maven/bin/mvn /usr/bin/ && \
@@ -85,6 +86,9 @@ RUN gcc /tmp/reset_signals.c -o /bin/reset_signals \
 
 # ADD docker/butterfly /etc/butterfly
 ADD docker/slides_init /slides_init
+WORKDIR /slides_init
+RUN rm -rf node_modules \
+ && npm install
 ADD docker/mime.types /etc/mime.types
 RUN chmod 755 /usr/bin/mvn /start.sh
 

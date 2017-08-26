@@ -79,7 +79,7 @@ if [ -n "${slide}" ]; then
 fi
 
 # Start butterfly server in the background
-/butterfly/butterfly.server.py --motd='' --unsecure --host=0.0.0.0 --login=false --cmd="bash -l" &
+/butterfly/butterfly.server.py --motd='' --i_hereby_declare_i_dont_want_any_security_whatsoever --unsecure --host=0.0.0.0 --cmd="bash -l" &
 
 # Hook for starting up custom code
 if [ -f /start_extra.sh ]; then
